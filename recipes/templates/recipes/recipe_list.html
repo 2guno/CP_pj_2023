@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Cookbook - 요리 목록</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'recipes/css/style.css' %}">
+</head>
+<body>
+    <h1>요리 목록</h1>
+    <ul>
+        {% for recipe in recipes %}
+            <li><a href="{% url 'recipes:detail' recipe.pk %}">{{ recipe.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <script src="{% static 'recipes/js/script.js' %}"></script>
+</body>
+</html>

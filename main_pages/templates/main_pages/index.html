@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Cookbook - 메인 페이지</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'recipes/css/style.css' %}">
+</head>
+<body>
+    <h1>My Cookbook</h1>
+    <p>가지고 있는 재료로 어떤 요리를 만들 수 있을까요?</p>
+
+    <form action="{% url 'recipes:recommendation' %}" method="POST">
+        {% csrf_token %}
+        <label for="ingredients">가지고 있는 재료:</label>
+        <input type="text" id="ingredients" name="ingredients" placeholder="재료를 입력하세요">
+        <button type="submit">요리 추천</button>
+    </form>
+
+    <script src="{% static 'recipes/js/script.js' %}"></script>
+</body>
+</html>
