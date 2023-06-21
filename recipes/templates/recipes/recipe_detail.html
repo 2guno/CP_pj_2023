@@ -1,15 +1,12 @@
-{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Cookbook - 요리 상세 정보</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'recipes/css/style.css' %}">
+    <meta charset="UTF-8">
+    <h1>{{ recipes.name }}</h1>
+    <p>재료: {{ recipes.ingredients }}</p>
+    <p>요리 설명: {{ recipes.description }}</p>
 </head>
 <body>
-    <h1>{{ recipe.name }}</h1>
-    <p><strong>재료:</strong> {{ recipe.ingredients }}</p>
-    <p><strong>절차:</strong> {{ recipe.procedure }}</p>
-    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" width="300">
-    <script src="{% static 'recipes/js/script.js' %}"></script>
+
 </body>
 </html>

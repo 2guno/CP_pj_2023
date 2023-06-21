@@ -1,21 +1,29 @@
-{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Cookbook - 메인 페이지</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'recipes/css/style.css' %}">
+    <title>메인 페이지</title>
+    <style>
+        .intro-container {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .intro-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .btn-recommend {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h1>My Cookbook</h1>
-    <p>가지고 있는 재료로 어떤 요리를 만들 수 있을까요?</p>
-
-    <form action="{% url 'recipes:recommendation' %}" method="POST">
-        {% csrf_token %}
-        <label for="ingredients">가지고 있는 재료:</label>
-        <input type="text" id="ingredients" name="ingredients" placeholder="재료를 입력하세요">
-        <button type="submit">요리 추천</button>
-    </form>
-
-    <script src="{% static 'recipes/js/script.js' %}"></script>
+    <div class="intro-container">
+        <h1>COOKBOOK사이트에 오신걸 환영합니다!</h1>
+        <div class="intro-text">
+            <p>여기에서 가지고 있는 재료로 할 수 있는 요리를 찾아보세요.</p>
+        </div>
+        <a href="/recipes" class="btn-recommend">요리 추천</a>
+    </div>
 </body>
 </html>

@@ -1,49 +1,44 @@
-import pandas as pd
-from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Recipe
 
 
-@csrf_exempt
 def recipe_list(request):
+    recipes = Recipe.objects.all()
+    return render(request, 'recipes/recipe_list.html', {'recipes': recipes})
+
+
+def recommendation(request):
     if request.method == 'POST':
         ingredients = request.POST.get('ingredients', '').split(',')
-
-        # CSV 파일 경로
-        csv_path = 'recipes/data/recipes.csv'
-
-        # CSV 파일을 pandas DataFrame으로 읽어옴
-        df = pd.read_csv(csv_path)
-
-        # 요리명과 재료 컬럼 추출
-        recipe_names = df['요리명'].tolist()
-        recipe_ingredients = df['재료'].tolist()
-
-        # 재료와 일치하는 요리 목록 필터링
-        matching_recipes = []
-        for name, ingredients_list in zip(recipe_names, recipe_ingredients):
-            if all(ingredient.lower() in ingredients for ingredient in ingredients_list.split(',')):
-                matching_recipes.append({'name': name})
-
-        return JsonResponse({'recipes': matching_recipes})
-    else:
-        return JsonResponse({'error': 'Invalid request method.'})
+        recipes = Recipe.objects.filter(ingredients__icontains=ingredients[0])
+        for ingredient in ingredients[1:]:
+            recipes = recipes.filter(ingredients__icontains=ingredient)
+        return render(request, 'recipes/recommendation.html', {'recipes': recipes})
+    return render(request, 'recipes/recommendation.html')
 
 
-def recipe_detail(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk)
-    return render(request, 'recipes/recipe_detail.html', {'recipe': recipe})
+def recipe_detail(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    return render(request, 'recipes/recipe_detail.html', {'recipes': recipe})
 
 
-def recipe_recommendation(request):
+def add_recipe(request):
     if request.method == 'POST':
-        #ingredients = request.POST.get('ingredients', '').strip()
-        # 추천 로직을 구현합니다.
-        # 적절한 요리를 찾아서 결과를 반환합니다.
-        ingredients = '참깨'
-    else:
-        ingredients = '고추장'
+        name = request.POST.get('name')
+        ingredients = request.POST.get('ingredients')
+        description = request.POST.get('description')
 
-    return render(request, 'recipes/recommendation.html', {'ingredients': ingredients})
+        recipe = Recipe(name=name, ingredients=ingredients, description=description)
+        recipe.save()
+
+        return redirect('recipes:recipe_list')
+
+    return render(request, 'recipes/add_recipe.html')
+
+
+def delete_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe.delete()
+    return redirect('recipes:recipe_list')
